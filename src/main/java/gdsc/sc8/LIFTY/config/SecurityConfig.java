@@ -31,11 +31,13 @@ public class SecurityConfig {
     };
 
     private static final String[] WHITE_LIST = {
-        "/api/auth/**"
+        "/api/auth/**",
+        "/swagger-ui/**",
+        "/api-docs/**",
     };
 
-    private static final String[] SELLER_LIST = {
-        "/api/v2/**"
+    private static final String[] AUTHENTICATION_LIST = {
+        "/api/v1/**"
     };
 
     @Bean
@@ -47,7 +49,7 @@ public class SecurityConfig {
                 auth
                     .requestMatchers(WHITE_LIST).permitAll()
                     .requestMatchers(DEFAULT_LIST).permitAll()
-                    .requestMatchers(SELLER_LIST).hasRole("USER")
+                    .requestMatchers(AUTHENTICATION_LIST).hasRole("USER")
                     .anyRequest().authenticated();
             }).exceptionHandling(c ->
                 c.authenticationEntryPoint(entryPoint).accessDeniedHandler(accessDeniedHandler)
