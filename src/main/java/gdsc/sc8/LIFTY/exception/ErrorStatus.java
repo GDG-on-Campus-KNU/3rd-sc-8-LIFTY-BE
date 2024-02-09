@@ -25,6 +25,7 @@ public enum ErrorStatus {
     /*
      * 404 Not Found
      */
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
 
     /*
      * 500 Internal Server Error
