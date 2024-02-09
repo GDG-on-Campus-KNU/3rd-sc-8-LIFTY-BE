@@ -7,13 +7,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends AuditingTimeEntity {
 
     @Id
@@ -29,11 +30,11 @@ public class User extends AuditingTimeEntity {
     private Authority authority;
 
     @Builder
-    public User(String email, String password, String name, Long exp, String profileUri, Authority authority) {
+    public User(String email, String password, String name, String profileUri, Authority authority) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.exp = exp;
+        this.exp = 0L;
         this.profileUri = profileUri;
         this.authority = authority;
     }
