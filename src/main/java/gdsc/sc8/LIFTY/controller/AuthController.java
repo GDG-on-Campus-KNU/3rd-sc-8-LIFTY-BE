@@ -1,9 +1,11 @@
 package gdsc.sc8.LIFTY.controller;
 
+import gdsc.sc8.LIFTY.DTO.ApiResponseDto;
 import gdsc.sc8.LIFTY.DTO.auth.LoginRequestDto;
 import gdsc.sc8.LIFTY.DTO.auth.SignUpRequestDto;
 import gdsc.sc8.LIFTY.DTO.auth.TokenDto;
 import gdsc.sc8.LIFTY.DTO.user.UserResponseDto;
+import gdsc.sc8.LIFTY.exception.SuccessStatus;
 import gdsc.sc8.LIFTY.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +23,16 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public UserResponseDto signup(
+    public ApiResponseDto<UserResponseDto> signup(
         @RequestBody SignUpRequestDto signUpRequestDto) {
-        return authService.signup(signUpRequestDto);
+        return ApiResponseDto.success(SuccessStatus.SIGNUP_SUCCESS, authService.signup(signUpRequestDto));
 
     }
 
     @PostMapping("/login")
-    public TokenDto login(
+    public ApiResponseDto<TokenDto> login(
         @RequestBody LoginRequestDto loginRequestDto) {
-        return authService.login(loginRequestDto);
+        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.login(loginRequestDto));
     }
 
 }
