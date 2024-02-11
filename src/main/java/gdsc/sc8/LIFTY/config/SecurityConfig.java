@@ -6,6 +6,9 @@ import gdsc.sc8.LIFTY.jwt.CustomEntryPoint;
 import gdsc.sc8.LIFTY.jwt.CustomUserDetailsService;
 import gdsc.sc8.LIFTY.jwt.JwtFilter;
 import gdsc.sc8.LIFTY.jwt.TokenProvider;
+import gdsc.sc8.LIFTY.oauth2.OAuth2LoginFailureHandler;
+import gdsc.sc8.LIFTY.oauth2.OAuth2LoginSuccessHandler;
+import gdsc.sc8.LIFTY.oauth2.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,9 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -31,7 +37,10 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CustomEntryPoint entryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -57,6 +66,14 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(AbstractHttpConfigurer::disable)
             .headers(c -> c.frameOptions(FrameOptionsConfig::disable).disable())
+
+            .oauth2Login(oauth2Login -> oauth2Login
+                .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공 핸들러
+                .failureHandler(oAuth2LoginFailureHandler) // OAuth2 로그인 실패 핸들러
+                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                    .userService(oAuth2UserService) // 사용자 정보를 처리하는 서비스
+                )
+            )
             .authorizeHttpRequests(auth -> {
                 auth
                     .requestMatchers(WHITE_LIST).permitAll()
