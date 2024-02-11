@@ -30,12 +30,12 @@ public class User extends AuditingTimeEntity {
     private Authority authority;
 
     @Builder
-    public User(String email, String password, String name, String profileUri, Authority authority) {
+    public User(String email, String password, String name, String profileUri) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.exp = 0L;
         this.profileUri = profileUri;
-        this.authority = authority;
+        this.authority = Authority.ROLE_USER;
     }
 }
