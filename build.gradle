@@ -46,6 +46,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
 
+	//OAuth 2.0
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+
 }
 
 tasks.named('test') {

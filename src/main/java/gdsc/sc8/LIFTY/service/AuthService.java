@@ -64,9 +64,11 @@ public class AuthService {
 
             return tokenDto;
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             throw new NotFoundException(ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION,
                 ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(ErrorStatus.INTERNAL_SERVER_ERROR,
                 ErrorStatus.INTERNAL_SERVER_ERROR.getMessage());
         }
