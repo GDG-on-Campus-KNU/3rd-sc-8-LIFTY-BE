@@ -1,6 +1,8 @@
 package gdsc.sc8.LIFTY.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gdsc.sc8.LIFTY.DTO.chat.ChatRequestDto;
+import gdsc.sc8.LIFTY.domain.User;
+import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import gdsc.sc8.LIFTY.service.ChatService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +22,12 @@ import java.net.http.HttpResponse;
 @Tag(name = "Chat", description = "채팅 관련 API")
 public class ChatController {
     private final ChatService chatService;
+    private final UserRepository userRepository;
 
     @PostMapping(produces = "text/event-stream")
     public ResponseEntity<SseEmitter> chat(@RequestBody ChatRequestDto request){
-
-        SseEmitter response = chatService.generateResponse(request.getContent(),request.isImage());
+        User user = userRepository.findByEmail("test").get();
+        SseEmitter response = chatService.generateResponse(user,request.getContent(),request.isImage());
         return ResponseEntity.ok().body(response);
     }
 }
