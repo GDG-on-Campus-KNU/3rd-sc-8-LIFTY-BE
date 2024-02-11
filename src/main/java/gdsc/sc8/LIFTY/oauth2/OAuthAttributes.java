@@ -30,6 +30,7 @@ public class OAuthAttributes {
             .name(oAuth2UserInfo.getName())
             .email(oAuth2UserInfo.getEmail())
             .profileUri(oAuth2UserInfo.getPicture())
+            .socialId(oAuth2UserInfo.getId())
             .build();
     }
 
