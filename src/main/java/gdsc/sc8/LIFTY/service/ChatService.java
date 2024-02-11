@@ -1,5 +1,6 @@
 package gdsc.sc8.LIFTY.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gdsc.sc8.LIFTY.DTO.gemini.GeminiRequestDto;
@@ -12,6 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +27,19 @@ public class ChatService {
     @Value("${gemini.access.token}")
     private String ACCESSTOKEN;
 
-    public SseEmitter callGemini(){
+    public SseEmitter generateResponse(String content, Boolean isImage){
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
         String url = "https://"+REGION+"-aiplatform.googleapis.com/v1/projects/"
                 +PROJECT_ID+"/locations/"
-                +REGION+"/publishers/google/models/gemini-pro:streamGenerateContent";
-        //요청 본문
-        GeminiRequestDto requestDto = new GeminiRequestDto("안녕하세요");
+                +REGION+"/publishers/google/models/gemini-pro-vision:streamGenerateContent?alt=sse";
+
+
 
         WebClient.create()
                 .post().uri(url)
                 .header("Authorization","Bearer "+ACCESSTOKEN)
                 .header("Content-Type", "application/json")
-                .body(BodyInserters.fromValue(requestDto))
+                .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content,isImage)))
                 .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class))
                 .doOnNext(data -> {
                     try {
@@ -50,7 +53,8 @@ public class ChatService {
                 .doOnError(sseEmitter::completeWithError)
                 .subscribe();
 
-
         return sseEmitter;
     }
+
+
 }
