@@ -38,4 +38,5 @@ out/
 
 /src/main/resources/**/*.yml
 /src/main/resources/**/*.yaml
+/src/main/resources/**/*.properties
 /src/main/resources/**/*.json
