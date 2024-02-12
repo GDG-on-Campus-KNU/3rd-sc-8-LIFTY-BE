@@ -1,5 +1,5 @@
 package gdsc.sc8.LIFTY.controller;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import gdsc.sc8.LIFTY.DTO.chat.ChatRequestDto;
 import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.infrastructure.UserRepository;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -24,9 +23,12 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
 
+
     @PostMapping(produces = "text/event-stream")
-    public ResponseEntity<SseEmitter> chat(@RequestBody ChatRequestDto request){
-        User user = userRepository.findByEmail("test").get();
+    public ResponseEntity<SseEmitter> chat(Authentication authentication,
+                                           @RequestBody ChatRequestDto request){
+
+        User user = userRepository.getUserByEmail(authentication.getName());
         SseEmitter response = chatService.generateResponse(user,request.getContent(),request.isImage());
         return ResponseEntity.ok().body(response);
     }

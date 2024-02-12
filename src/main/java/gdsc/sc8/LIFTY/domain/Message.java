@@ -17,6 +17,7 @@ public class Message {
     private Chat chat;
     @Enumerated(EnumType.STRING)
     private Sender sender;
+    @Column(length = 50000)
     private String content;
     private LocalDateTime createdAt;
 }
