@@ -8,11 +8,11 @@ public class UserInfoResponseDto {
 
     private String name;
     private String profileUri;
-    private Integer level;
+    private Long level;
     private Long exp;
 
     @Builder
-    public UserInfoResponseDto(String name, String profileUri, Integer level, Long exp) {
+    public UserInfoResponseDto(String name, String profileUri, Long level, Long exp) {
         this.name = name;
         this.profileUri = profileUri;
         this.level = level;

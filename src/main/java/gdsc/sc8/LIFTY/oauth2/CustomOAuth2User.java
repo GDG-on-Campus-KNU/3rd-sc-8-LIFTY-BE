@@ -22,4 +22,9 @@ public class CustomOAuth2User extends DefaultOAuth2User {
         this.socialId = socialId;
     }
 
+    // @AuthenticationPrincipal User user에서 OAuth2 유저와 일반 유저 동일하게 사용하기 위해 필요
+    @Override
+    public String getName() {
+        return (String) this.getAttributes().get("email");
+    }
 }
