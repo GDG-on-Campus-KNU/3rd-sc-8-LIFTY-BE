@@ -43,7 +43,7 @@ public class WebClientConfig {
         return WebClient.builder()
                 .baseUrl(url)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.AUTHORIZATION,"Bearer "+ACCESSTOKEN)
+                //.defaultHeader(HttpHeaders.AUTHORIZATION,"Bearer "+ACCESSTOKEN)
                 .codecs(config -> config.defaultCodecs().maxInMemorySize(DEFAULT_MEMORY_SIZE))
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();

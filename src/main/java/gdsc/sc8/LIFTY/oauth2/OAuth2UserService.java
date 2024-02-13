@@ -30,7 +30,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        User user = getUser(attributes);
+        System.out.println(userRequest.getAccessToken().getTokenValue());
+        User user = getUser(attributes,userRequest.getAccessToken().getTokenValue());
 
         return new CustomOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority(user.getAuthority().name())),
@@ -41,28 +42,30 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         );
     }
 
-    private User getUser(OAuthAttributes attributes) {
+    private User getUser(OAuthAttributes attributes,String geminiToken) {
         User user = userRepository.findBySocialId(attributes.getOAuth2UserInfo().getId()).orElse(null);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
-            return saveUser(attributes, authentication.getName());
+            return saveUser(attributes, authentication.getName(), geminiToken);
         }
 
         if (user == null) {
-            return saveUser(attributes);
+            return saveUser(attributes, geminiToken);
         }
         return user;
     }
 
-    private User saveUser(OAuthAttributes attributes, String email) {
+    private User saveUser(OAuthAttributes attributes, String email, String geminiToken) {
         User user = userRepository.getUserByEmail(email);
         user.changeSocialId(attributes.getOAuth2UserInfo().getId());
+        user.setGeminiToken(geminiToken);
         return userRepository.save(user);
     }
 
-    private User saveUser(OAuthAttributes attributes) {
+    private User saveUser(OAuthAttributes attributes, String geminiToken) {
         User user = attributes.toEntity(attributes.getOAuth2UserInfo());
+        user.setGeminiToken(geminiToken);
         return userRepository.save(user);
     }
 }

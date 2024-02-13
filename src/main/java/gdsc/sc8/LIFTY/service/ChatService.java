@@ -9,6 +9,7 @@ import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -36,10 +37,11 @@ public class ChatService {
 
         Flux<GeminiResponseDto> flux = webClientConfig.webClient()
                 .post()
+                .header(HttpHeaders.AUTHORIZATION,"Bearer "+user.getGeminiToken())
                 .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content,isImage)))
                 .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
 
-        flux.doOnNext(data -> doEmit(data,sseEmitter,chat))
+        flux.doOnNext(data -> emitAndSave(data,sseEmitter,chat))
                 .doOnComplete(sseEmitter::complete)
                 .doOnError(sseEmitter::completeWithError)
                 .subscribe();
@@ -56,7 +58,7 @@ public class ChatService {
         return chatRepository.save(new Chat(user,today));
     }
 
-    public void doEmit(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
+    public void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
         StringBuffer sb = new StringBuffer();
         try {
             String response = data.getCandidates().get(0).getContent().getParts().get(0).getText();

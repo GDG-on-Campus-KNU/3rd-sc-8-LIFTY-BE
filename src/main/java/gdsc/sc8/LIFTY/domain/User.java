@@ -7,10 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -20,7 +17,6 @@ public class User extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
     private String password;
     private String name;
@@ -29,6 +25,9 @@ public class User extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
     private String socialId;
+    @Setter
+    @Getter
+    private String GeminiToken;
 
     @Builder
     public User(String email, String password, String name, String profileUri, String socialId) {
