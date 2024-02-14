@@ -29,7 +29,7 @@ public class ChatImageController {
     @PostMapping("/upload/image")
     public ApiResponseDto<ImageResponseDto> upload(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestParam(name = "image") MultipartFile image) throws IOException {
+        @RequestParam(name = "image", required = false) MultipartFile image) throws IOException {
         return ApiResponseDto.success(
             SuccessStatus.IMAGE_UPLOAD_SUCCESS, chatImageService.upload(user.getUsername(), image));
     }
