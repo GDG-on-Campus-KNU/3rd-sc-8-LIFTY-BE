@@ -7,12 +7,11 @@ import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.ChatRepository;
+import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
 
@@ -23,13 +22,16 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-    private final MessageService messageService;
+
+    private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final MessageService messageService;
     private final WebClientConfig webClientConfig;
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
-    public SseEmitter generateResponse(User user, String content, Boolean isImage){
+    public SseEmitter generateResponse(String email, String content, Boolean isImage) {
+        User user = userRepository.getUserByEmail(email);
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
         Chat chat = returnChat(user,LocalDate.now());
         messageService.saveMessage(Sender.USER, content, chat);
