@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class DataBucketUtil {
 
-    @Value("${spring.cloud.gcp.storage.credentials.location}")
-    private String keyFileLocation;
+//    @Value("${spring.cloud.gcp.storage.credentials.location}")
+//    private String keyFileLocation;
+
+    private String keyFileLocation = "classpath:lifty-gdsc-e2ffac987452.json";
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
