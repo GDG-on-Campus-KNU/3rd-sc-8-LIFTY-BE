@@ -28,7 +28,7 @@ public class ChatController {
     public ResponseEntity<SseEmitter> chat(Authentication authentication,
                                            @RequestBody ChatRequestDto request){
 
-        User user = userRepository.getUserByEmail("kwonsh4396@gmail.com");
+        User user = userRepository.getUserByEmail(authentication.getName());
         SseEmitter response = chatService.generateResponse(user,request.getContent(),request.isImage());
         return ResponseEntity.ok().body(response);
     }
