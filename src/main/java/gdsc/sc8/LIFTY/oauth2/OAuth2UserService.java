@@ -30,8 +30,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        System.out.println(userRequest.getAccessToken().getTokenValue());
-        User user = getUser(attributes,userRequest.getAccessToken().getTokenValue());
+        String email = oAuth2User.getAttribute("email");
+
+        User user = getUser(attributes, email,userRequest.getAccessToken().getTokenValue());
 
         return new CustomOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority(user.getAuthority().name())),
@@ -42,12 +43,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         );
     }
 
-    private User getUser(OAuthAttributes attributes,String geminiToken) {
+    private User getUser(OAuthAttributes attributes, String email, String geminiToken) {
         User user = userRepository.findBySocialId(attributes.getOAuth2UserInfo().getId()).orElse(null);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
-            return saveUser(attributes, authentication.getName(), geminiToken);
+            return saveUser(attributes, email,geminiToken);
         }
 
         if (user == null) {

@@ -21,6 +21,7 @@ public class User extends AuditingTimeEntity {
     private String password;
     private String name;
     private Long exp;
+    private Long level;
     private String profileUri;
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -35,6 +36,7 @@ public class User extends AuditingTimeEntity {
         this.password = password;
         this.name = name;
         this.exp = 0L;
+        this.level = 0L;
         this.profileUri = profileUri;
         this.socialId = socialId;
         this.authority = Authority.ROLE_USER;
@@ -42,5 +44,13 @@ public class User extends AuditingTimeEntity {
 
     public void changeSocialId(String socialId) {
         this.socialId = socialId;
+    }
+
+    public void updateExp(Long exp) {
+        this.exp = exp;
+    }
+
+    public void updateLevel(Long level) {
+        this.level = level;
     }
 }
