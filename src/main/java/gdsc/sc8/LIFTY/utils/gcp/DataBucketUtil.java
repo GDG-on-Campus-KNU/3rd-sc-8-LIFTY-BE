@@ -24,8 +24,10 @@ public class DataBucketUtil {
 
     private String keyFileLocation = "classpath:lifty-gdsc-e2ffac987452.json";
 
-    @Value("${spring.cloud.gcp.storage.bucket}")
-    private String bucketName;
+//    @Value("${spring.cloud.gcp.storage.bucket}")
+//    private String bucketName;
+
+    private String bucketName = "lifty-bucket";
 
 //    private final Storage storage;
 //
