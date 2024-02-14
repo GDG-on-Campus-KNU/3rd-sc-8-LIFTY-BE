@@ -21,8 +21,7 @@ public class WebClientConfig {
     private String REGION;
     @Value("${gemini.project.id}")
     private String PROJECT_ID;
-    @Value("${gemini.access.token}")
-    private String ACCESSTOKEN;
+
     private static final Integer DEFAULT_TIMEOUT = 1000 * 20;
     private static final Integer DEFAULT_MEMORY_SIZE = 2 * 1024 * 1024;
     HttpClient httpClient = HttpClient.create()
