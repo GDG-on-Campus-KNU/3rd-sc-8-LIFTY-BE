@@ -20,6 +20,7 @@ public enum SuccessStatus {
      * 201 CREATED
      */
     SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입 성공"),
+    IMAGE_UPLOAD_SUCCESS(HttpStatus.CREATED, "이미지 업로드 성공"),
     ;
 
     private final HttpStatus httpStatus;
