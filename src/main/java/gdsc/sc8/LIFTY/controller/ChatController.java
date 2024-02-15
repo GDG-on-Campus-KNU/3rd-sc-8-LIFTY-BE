@@ -1,5 +1,6 @@
 package gdsc.sc8.LIFTY.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import gdsc.sc8.LIFTY.DTO.chat.ChatRequestDto;
 import gdsc.sc8.LIFTY.service.ChatService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,8 +29,8 @@ public class ChatController {
 
     @PostMapping(produces = "text/event-stream")
     public ResponseEntity<SseEmitter> chat(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user, @RequestBody ChatRequestDto request){
-        SseEmitter response = chatService.generateResponse(user.getUsername(),request.getContent(),request.isImage());
+        @Parameter(hidden = true) @AuthenticationPrincipal User user, @RequestBody ChatRequestDto request) {
+        SseEmitter response = chatService.generateResponse(user.getUsername(),request.getRequest(),request.isImage());
         return ResponseEntity.ok().body(response);
     }
 }

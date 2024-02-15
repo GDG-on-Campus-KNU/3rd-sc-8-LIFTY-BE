@@ -1,6 +1,8 @@
 package gdsc.sc8.LIFTY.DTO.gemini;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import gdsc.sc8.LIFTY.domain.Message;
+import gdsc.sc8.LIFTY.enums.Sender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class GeminiRequestDto implements Serializable {
     private List<Content> contents;
     @Data
@@ -39,15 +41,8 @@ public class GeminiRequestDto implements Serializable {
             this.fileData=fileData;
         }
     }
-    public GeminiRequestDto(String text){
-        Part part = new Part(text);
-        List<Part> parts = new ArrayList<>();
-        parts.add(part);
-        Content content = new Content("USER",parts);
-        List<Content> contents = new ArrayList<>();
-        contents.add(content);
-        this.contents = contents;
-    }
+
+    //TODO:멀티모달 contents 객체 생성
     public GeminiRequestDto(String text,String imageUrl){
         Part.FileData fileData = new Part.FileData("image/**",imageUrl);
         Part part1 = new Part(text);
@@ -61,10 +56,23 @@ public class GeminiRequestDto implements Serializable {
         this.contents = contents;
     }
 
-    public static GeminiRequestDto toRequestDto(String content, Boolean isImage){
-        if (isImage) return new GeminiRequestDto("explain image",content);
-        else return new GeminiRequestDto(content);
+    public static GeminiRequestDto toRequestDto(List<Message> messages){
+        List<GeminiRequestDto.Content> contents = new ArrayList<>();
+        for(Message message:messages)
+            contents.add(GeminiRequestDto.toContent(message.getSender(),message.getContent()));
+        return new GeminiRequestDto(contents);
+    }
 
+    public static Content toContent(Sender role, String text){
+        List<Part> parts = new ArrayList<>();
+        if (role==Sender.USER) {
+            parts.add(new Part(text));
+            return new Content("USER",parts);
+        }
+        else {
+            parts.add(new Part(text));
+            return new Content("MODEL",parts);
+        }
     }
 
 }
