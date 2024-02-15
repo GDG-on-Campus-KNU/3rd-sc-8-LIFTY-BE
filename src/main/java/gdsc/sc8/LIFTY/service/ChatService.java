@@ -8,6 +8,8 @@ import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.ChatRepository;
+import gdsc.sc8.LIFTY.infrastructure.UserRepository;
+import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -24,13 +26,16 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-    private final MessageService messageService;
+
     private final ChatRepository chatRepository;
     private final GeminiConfig geminiConfig;
+    private final MessageService messageService;
+    private final UserRepository userRepository;
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
-    public SseEmitter generateResponse(User user, String content, Boolean isImage){
+    public SseEmitter generateResponse(String email, String content, Boolean isImage) {
+        User user = userRepository.getUserByEmail(email);
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
         Chat chat = returnChat(user,LocalDate.now());
         messageService.saveMessage(Sender.USER, content, chat);
@@ -62,9 +67,11 @@ public class ChatService {
     public void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
         StringBuffer sb = new StringBuffer();
         try {
-            String response = data.getCandidates().get(0).getContent().getParts().get(0).getText();
-            sb.append(response);
-            sseEmitter.send(response);
+            if (data.getCandidates().get(0).getContent().getParts()!=null){
+                String response = data.getCandidates().get(0).getContent().getParts().get(0).getText();
+                sb.append(response);
+                sseEmitter.send(response);
+            }
 
             if (data.getCandidates().get(0).getFinishReason()!=null)
                 messageService.saveMessage(Sender.MODEL, sb.toString(), chat);
