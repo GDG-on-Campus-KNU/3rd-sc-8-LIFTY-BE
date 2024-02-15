@@ -1,19 +1,13 @@
 package gdsc.sc8.LIFTY.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
-
 @Entity
-@Getter
-@NoArgsConstructor
-public class Chat {
+public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,12 +15,7 @@ public class Chat {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     private LocalDate date;
-    @ColumnDefault("false")
-    private boolean isUsedInDiary;
-
-    public Chat(User user, LocalDate date){
-        this.user = user;
-        this.date = date;
-    }
+    @Column(length = 50000)
+    private String content;
 
 }
