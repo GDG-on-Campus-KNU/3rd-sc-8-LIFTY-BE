@@ -2,6 +2,7 @@ package gdsc.sc8.LIFTY.service;
 
 import gdsc.sc8.LIFTY.DTO.gemini.GeminiRequestDto;
 import gdsc.sc8.LIFTY.DTO.gemini.GeminiResponseDto;
+import gdsc.sc8.LIFTY.config.GeminiConfig;
 import gdsc.sc8.LIFTY.config.WebClientConfig;
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.User;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class ChatService {
     private final MessageService messageService;
     private final ChatRepository chatRepository;
-    private final WebClientConfig webClientConfig;
+    private final GeminiConfig geminiConfig;
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
@@ -35,9 +36,8 @@ public class ChatService {
         messageService.saveMessage(Sender.USER, content, chat);
 
 
-        Flux<GeminiResponseDto> flux = webClientConfig.webClient()
+        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user)
                 .post()
-                .header(HttpHeaders.AUTHORIZATION,"Bearer "+user.getGeminiToken())
                 .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content,isImage)))
                 .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
 
@@ -48,6 +48,7 @@ public class ChatService {
 
         return sseEmitter;
     }
+
 
 
     public Chat returnChat(User user, LocalDate today){
