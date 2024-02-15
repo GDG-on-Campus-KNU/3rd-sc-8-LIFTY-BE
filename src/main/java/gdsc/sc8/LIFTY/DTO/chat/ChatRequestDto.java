@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ChatRequestDto {
-    private String content;
+    private String request;
     private boolean isImage;
 }

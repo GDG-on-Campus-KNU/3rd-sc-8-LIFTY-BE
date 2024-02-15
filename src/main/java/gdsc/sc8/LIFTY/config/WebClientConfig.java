@@ -1,7 +1,6 @@
 package gdsc.sc8.LIFTY.config;
 
 import io.netty.channel.ChannelOption;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -15,12 +14,6 @@ import java.time.Duration;
 
 @Configuration
 public class WebClientConfig {
-    @Value("${gemini.secret.key}")
-    private String KEY;
-    @Value("${gemini.region}")
-    private String REGION;
-    @Value("${gemini.project.id}")
-    private String PROJECT_ID;
 
     private static final Integer DEFAULT_TIMEOUT = 1000 * 20;
     private static final Integer DEFAULT_MEMORY_SIZE = 2 * 1024 * 1024;
@@ -30,19 +23,8 @@ public class WebClientConfig {
 
     @Bean
     public WebClient webClient(){
-
-        //Stream 지원 안됨
-        String quickUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+KEY;
-
-        String url = "https://"+REGION+"-aiplatform.googleapis.com/v1/projects/"
-                +PROJECT_ID+"/locations/"
-                +REGION+"/publishers/google/models/gemini-pro-vision:streamGenerateContent?alt=sse";
-
-
         return WebClient.builder()
-                .baseUrl(url)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                //.defaultHeader(HttpHeaders.AUTHORIZATION,"Bearer "+ACCESSTOKEN)
                 .codecs(config -> config.defaultCodecs().maxInMemorySize(DEFAULT_MEMORY_SIZE))
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();

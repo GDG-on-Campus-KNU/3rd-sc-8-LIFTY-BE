@@ -2,14 +2,14 @@ package gdsc.sc8.LIFTY.service;
 
 import gdsc.sc8.LIFTY.DTO.gemini.GeminiRequestDto;
 import gdsc.sc8.LIFTY.DTO.gemini.GeminiResponseDto;
-import gdsc.sc8.LIFTY.config.WebClientConfig;
+import gdsc.sc8.LIFTY.config.GeminiConfig;
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.ChatRepository;
 import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -19,28 +19,29 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final GeminiConfig geminiConfig;
     private final MessageService messageService;
-    private final WebClientConfig webClientConfig;
+    private final UserRepository userRepository;
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
-    public SseEmitter generateResponse(String email, String content, Boolean isImage) {
+    public SseEmitter generateResponse(String email, String request, Boolean isImage) {
         User user = userRepository.getUserByEmail(email);
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
+
         Chat chat = returnChat(user,LocalDate.now());
-        messageService.saveMessage(Sender.USER, content, chat);
+        messageService.saveMessage(Sender.USER, request, chat);
+        GeminiRequestDto requestDto = GeminiRequestDto.toRequestDto(messageService.makeContents(chat));
 
-
-        Flux<GeminiResponseDto> flux = webClientConfig.webClient()
+        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user)
                 .post()
-                .header(HttpHeaders.AUTHORIZATION,"Bearer "+user.getGeminiToken())
-                .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content,isImage)))
+                .body(BodyInserters.fromValue(requestDto))
                 .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
 
         flux.doOnNext(data -> emitAndSave(data,sseEmitter,chat))
@@ -50,6 +51,7 @@ public class ChatService {
 
         return sseEmitter;
     }
+
 
 
     public Chat returnChat(User user, LocalDate today){
@@ -70,8 +72,9 @@ public class ChatService {
             if (data.getCandidates().get(0).getFinishReason()!=null)
                 messageService.saveMessage(Sender.MODEL, sb.toString(), chat);
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new RuntimeException(e);
         }
     }
+
 }
