@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat,Long> {
     Optional<Chat> findByUserAndDate(User user, LocalDate date);
+    List<Chat> findByDate(LocalDate date);
+
 }
