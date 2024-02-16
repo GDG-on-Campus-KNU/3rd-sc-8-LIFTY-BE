@@ -1,6 +1,5 @@
 package gdsc.sc8.LIFTY.service;
 
-import gdsc.sc8.LIFTY.DTO.gemini.GeminiRequestDto;
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.Message;
 import gdsc.sc8.LIFTY.enums.Sender;
@@ -8,7 +7,6 @@ import gdsc.sc8.LIFTY.infrastructure.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

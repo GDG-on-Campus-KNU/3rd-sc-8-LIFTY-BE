@@ -1,8 +1,6 @@
 package gdsc.sc8.LIFTY.controller;
 
 import gdsc.sc8.LIFTY.DTO.ApiResponseDto;
-import gdsc.sc8.LIFTY.DTO.chat.ChatRequestDto;
-import gdsc.sc8.LIFTY.DTO.diary.DiaryRequestDto;
 import gdsc.sc8.LIFTY.DTO.diary.DiaryResponseDto;
 import gdsc.sc8.LIFTY.exception.SuccessStatus;
 import gdsc.sc8.LIFTY.service.DiaryService;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +24,7 @@ import java.util.List;
 @Tag(name = "Diary", description = "일기 관련 API")
 public class DiaryController {
     private final DiaryService diaryService;
-    @Operation(summary = "특정 날짜로 부터 7일전까지의 일기 내역을 조회합니다.")
+    @Operation(summary = "사용자의 모든 일기내역을 조회합니다.")
     @GetMapping
     public ApiResponseDto<List<DiaryResponseDto>> getUserInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal User user) {

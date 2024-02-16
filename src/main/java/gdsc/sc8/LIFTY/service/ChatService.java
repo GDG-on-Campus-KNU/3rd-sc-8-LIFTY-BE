@@ -35,7 +35,7 @@ public class ChatService {
         User user = userRepository.getUserByEmail(email);
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 
-        Chat chat = returnChat(user,LocalDate.now());
+        Chat chat = chatRepository.returnChat(user,LocalDate.now());
         messageService.saveMessage(Sender.USER, request, chat);
         GeminiRequestDto requestDto = GeminiRequestDto.toRequestDto(messageService.makeContents(chat));
 
@@ -53,14 +53,6 @@ public class ChatService {
     }
 
 
-
-    public Chat returnChat(User user, LocalDate today){
-        Optional<Chat> chat = chatRepository.findByUserAndDate(user,today);
-        if (chat.isPresent())
-            return chat.get();
-
-        return chatRepository.save(new Chat(user,today));
-    }
 
     public void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
         StringBuffer sb = new StringBuffer();
