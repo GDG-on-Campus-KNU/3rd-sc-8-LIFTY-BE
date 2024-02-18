@@ -24,7 +24,7 @@ public class GeminiConfig {
     private final WebClientConfig webClientConfig;
 
     public WebClient geminiClient(User user){
-        String quickUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+KEY;
+        String quickUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key="+KEY;
 
         String url = "https://"+REGION+"-aiplatform.googleapis.com/v1/projects/"
                 +PROJECT_ID+"/locations/"
