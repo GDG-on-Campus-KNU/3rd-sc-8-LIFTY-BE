@@ -32,4 +32,9 @@ public class DiaryController {
         return ApiResponseDto.success(SuccessStatus.DIARY_RESPONSE_SUCCESS,
                 diaryService.getDiaries(user.getUsername()));
     }
+
+//    @GetMapping("/test")
+//    public void test(@Parameter(hidden = true) @AuthenticationPrincipal User user){
+//        diaryService.checkPossibleDiary();
+//    }
 }

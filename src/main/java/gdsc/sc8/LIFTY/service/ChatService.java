@@ -43,7 +43,7 @@ public class ChatService {
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
         GeminiRequestDto requestDto;
 
-        Chat chat = returnChat(user,LocalDate.now());
+        Chat chat = chatRepository.returnChat(user,LocalDate.now());
         messageService.saveMessage(Sender.USER, request, chat);
 
         if (!isImage)
@@ -51,7 +51,7 @@ public class ChatService {
         else requestDto = imageService.toRequestDtoWithImage(request,user.getSocialId()!=null);
 
 
-        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user)
+        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user,isImage)
                 .post()
                 .body(BodyInserters.fromValue(requestDto))
                 .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
@@ -65,14 +65,6 @@ public class ChatService {
     }
 
 
-
-    private Chat returnChat(User user, LocalDate today){
-        Optional<Chat> chat = chatRepository.findByUserAndDate(user,today);
-        if (chat.isPresent())
-            return chat.get();
-
-        return chatRepository.save(new Chat(user,today));
-    }
 
     private void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
         StringBuffer sb = new StringBuffer();

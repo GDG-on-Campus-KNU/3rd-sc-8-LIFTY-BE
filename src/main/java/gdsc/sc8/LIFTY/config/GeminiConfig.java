@@ -23,19 +23,23 @@ public class GeminiConfig {
     private String KEY;
     private final WebClientConfig webClientConfig;
 
-    public WebClient geminiClient(User user){
-        String quickUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key="+KEY;
+    public WebClient geminiClient(User user,boolean isImage){
+        String quickUrlWithImage = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key="+KEY;
+        String quickUrlOnlyText = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+KEY;
 
         String url = "https://"+REGION+"-aiplatform.googleapis.com/v1/projects/"
                 +PROJECT_ID+"/locations/"
                 +REGION+"/publishers/google/models/gemini-pro-vision:streamGenerateContent?alt=sse";
 
-        if (user.getSocialId()==null){
+        if (user.getSocialId()==null && isImage){
             return webClientConfig.webClient().mutate()
-                    .baseUrl(quickUrl)
+                    .baseUrl(quickUrlWithImage)
                     .build();
-        }
-        else{
+        } else if (user.getSocialId()==null) {
+            return webClientConfig.webClient().mutate()
+                    .baseUrl(quickUrlOnlyText)
+                    .build();
+        } else{
             return webClientConfig.webClient().mutate()
                     .baseUrl(url)
                     .defaultHeader(HttpHeaders.AUTHORIZATION,"Bearer "+user.getGeminiToken())

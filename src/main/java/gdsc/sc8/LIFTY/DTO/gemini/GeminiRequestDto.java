@@ -54,7 +54,6 @@ public class GeminiRequestDto implements Serializable {
     }
 
 
-    //Text 채팅
     public static GeminiRequestDto toRequestDto(List<Message> messages){
         List<GeminiRequestDto.Content> contents = new ArrayList<>();
         for(Message message:messages)
@@ -74,6 +73,15 @@ public class GeminiRequestDto implements Serializable {
             parts.add(new Part(text));
             return new Content("MODEL",parts);
         }
+    }
+
+    public static GeminiRequestDto toRequestDto(String text){
+        List<GeminiRequestDto.Content> contents = new ArrayList<>();
+        List<Part> parts = new ArrayList<>();
+        parts.add(new Part(text));
+        contents.add(new Content("USER",parts));
+
+        return new GeminiRequestDto(contents, new GenerationConfig());
     }
 
 }

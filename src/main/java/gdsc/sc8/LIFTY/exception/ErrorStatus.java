@@ -29,6 +29,7 @@ public enum ErrorStatus {
      * 404 Not Found
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
+    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND,"키워드가 존재하지 않습니다."),
 
     /*
      * 500 Internal Server Error
