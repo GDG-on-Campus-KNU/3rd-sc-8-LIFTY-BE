@@ -24,10 +24,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatService {
 
+    private final UserRepository userRepository;
     private final ChatRepository chatRepository;
     private final GeminiConfig geminiConfig;
     private final MessageService messageService;
-    private final UserRepository userRepository;
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
@@ -76,5 +76,4 @@ public class ChatService {
             throw new RuntimeException(e);
         }
     }
-
 }

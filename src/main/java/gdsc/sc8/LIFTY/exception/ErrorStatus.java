@@ -14,6 +14,8 @@ public enum ErrorStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     WRONG_LOGIN_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "로그인 정보가 잘못되었습니다."),
     ALREADY_EXIST_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일입니다."),
+    NO_IMAGE(HttpStatus.BAD_REQUEST, "이미지가 없습니다."),
+    INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 파일 형식입니다."),
 
     /*
      * 401 Unauthorized
