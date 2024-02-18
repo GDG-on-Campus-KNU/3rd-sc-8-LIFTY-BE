@@ -2,6 +2,7 @@ package gdsc.sc8.LIFTY.controller;
 
 import gdsc.sc8.LIFTY.DTO.ApiResponseDto;
 import gdsc.sc8.LIFTY.DTO.image.ImageResponseDto;
+import gdsc.sc8.LIFTY.exception.ErrorStatus;
 import gdsc.sc8.LIFTY.exception.SuccessStatus;
 import gdsc.sc8.LIFTY.service.ChatImageService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,9 +28,13 @@ public class ChatImageController {
     private final ChatImageService chatImageService;
 
     @PostMapping("/upload/image")
-    public ApiResponseDto<ImageResponseDto> upload(
+    public ApiResponseDto<?> upload(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestParam(name = "image", required = false) MultipartFile image) throws IOException {
+        if (image == null || image.isEmpty() || image.getContentType() == null
+            || !image.getContentType().startsWith("image")) {
+            return ApiResponseDto.error(ErrorStatus.NO_IMAGE, ErrorStatus.NO_IMAGE.getMessage());
+        }
         return ApiResponseDto.success(
             SuccessStatus.IMAGE_UPLOAD_SUCCESS, chatImageService.upload(user.getUsername(), image));
     }
