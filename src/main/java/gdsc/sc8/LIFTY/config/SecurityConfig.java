@@ -1,6 +1,8 @@
 package gdsc.sc8.LIFTY.config;
 
 
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import gdsc.sc8.LIFTY.jwt.CustomAccessDeniedHandler;
 import gdsc.sc8.LIFTY.jwt.CustomEntryPoint;
 import gdsc.sc8.LIFTY.jwt.CustomUserDetailsService;
@@ -22,9 +24,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -45,6 +44,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Storage storage() {
+        return StorageOptions.getDefaultInstance().getService();
     }
 
     private static final String[] DEFAULT_LIST = {

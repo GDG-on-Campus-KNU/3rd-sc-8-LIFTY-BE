@@ -49,6 +49,10 @@ dependencies {
 	//OAuth 2.0
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	// Google Cloud Storage
+	// **version 1.2.8 필수! 이렇게 안하면 빌드 에러남**
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.8.RELEASE'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.8.RELEASE'
 
 }
 

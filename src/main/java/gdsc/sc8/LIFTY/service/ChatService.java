@@ -8,6 +8,7 @@ import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.ChatRepository;
 import gdsc.sc8.LIFTY.infrastructure.UserRepository;
+import gdsc.sc8.LIFTY.utils.gcp.DataBucketUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -27,47 +28,49 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final MessageService messageService;
     private final WebClientConfig webClientConfig;
+    private final DataBucketUtil dataBucketUtil;
+
+
     private static final Long DEFAULT_TIMEOUT = 120L * 1000 * 60;
 
 
     public SseEmitter generateResponse(String email, String content, Boolean isImage) {
         User user = userRepository.getUserByEmail(email);
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
-        Chat chat = returnChat(user,LocalDate.now());
+        Chat chat = returnChat(user, LocalDate.now());
         messageService.saveMessage(Sender.USER, content, chat);
 
-
         Flux<GeminiResponseDto> flux = webClientConfig.webClient()
-                .post()
-                .header(HttpHeaders.AUTHORIZATION,"Bearer "+user.getGeminiToken())
-                .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content,isImage)))
-                .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
+            .post()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getGeminiToken())
+            .body(BodyInserters.fromValue(GeminiRequestDto.toRequestDto(content, isImage)))
+            .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
 
-        flux.doOnNext(data -> emitAndSave(data,sseEmitter,chat))
-                .doOnComplete(sseEmitter::complete)
-                .doOnError(sseEmitter::completeWithError)
-                .subscribe();
+        flux.doOnNext(data -> emitAndSave(data, sseEmitter, chat))
+            .doOnComplete(sseEmitter::complete)
+            .doOnError(sseEmitter::completeWithError)
+            .subscribe();
 
         return sseEmitter;
     }
 
 
-    public Chat returnChat(User user, LocalDate today){
-        Optional<Chat> chat = chatRepository.findByUserAndDate(user,today);
+    public Chat returnChat(User user, LocalDate today) {
+        Optional<Chat> chat = chatRepository.findByUserAndDate(user, today);
         if (chat.isPresent())
             return chat.get();
 
-        return chatRepository.save(new Chat(user,today));
+        return chatRepository.save(new Chat(user, today));
     }
 
-    public void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat){
+    public void emitAndSave(GeminiResponseDto data, SseEmitter sseEmitter, Chat chat) {
         StringBuffer sb = new StringBuffer();
         try {
             String response = data.getCandidates().get(0).getContent().getParts().get(0).getText();
             sb.append(response);
             sseEmitter.send(response);
 
-            if (data.getCandidates().get(0).getFinishReason()!=null)
+            if (data.getCandidates().get(0).getFinishReason() != null)
                 messageService.saveMessage(Sender.MODEL, sb.toString(), chat);
 
         } catch (IOException e) {
@@ -75,3 +78,5 @@ public class ChatService {
         }
     }
 }
+
+
