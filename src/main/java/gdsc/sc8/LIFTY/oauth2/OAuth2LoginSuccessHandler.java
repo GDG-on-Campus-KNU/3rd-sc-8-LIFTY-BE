@@ -1,7 +1,9 @@
 package gdsc.sc8.LIFTY.oauth2;
 
 import gdsc.sc8.LIFTY.DTO.auth.TokenDto;
+import gdsc.sc8.LIFTY.domain.User;
 import gdsc.sc8.LIFTY.enums.Authority;
+import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import gdsc.sc8.LIFTY.jwt.TokenProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final TokenProvider tokenProvider;
+    private final ReissueTokenService reissueTokenService;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
@@ -28,6 +31,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String id = customOAuth2User.getSocialId();
+
+        reissueTokenService.reissueToken("google",customOAuth2User.getName());
+
 
         // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
         if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
