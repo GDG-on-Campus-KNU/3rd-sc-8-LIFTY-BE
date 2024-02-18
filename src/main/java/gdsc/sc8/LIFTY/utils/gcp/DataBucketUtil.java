@@ -22,12 +22,8 @@ public class DataBucketUtil {
     @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String keyFileLocation;
 
-//    private String keyFileLocation = "classpath:lifty-gdsc-e2ffac987452.json";
-
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
-
-//    private String bucketName = "lifty-bucket";
 
     private final Storage storage;
 
@@ -35,24 +31,6 @@ public class DataBucketUtil {
     public DataBucketUtil(Storage storage) {
         this.storage = storage;
     }
-
-//    public String uploadToBucket(MultipartFile file) throws IOException {
-//
-//        // 이미지 uuid와 파일 형식
-//        String uuid = UUID.randomUUID().toString();
-//        String ext = file.getContentType();
-//        log.info("uuid: " + uuid);
-//        log.info("bucketName: " + bucketName);
-//
-//        // GCS에 이미지 업로드
-//        log.info("GCS에 이미지 업로드");
-//        BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, uuid)
-//            .setContentType(ext)
-//            .build();
-//        Blob blob = storage.create(blobInfo, file.getBytes());
-//        log.info(blob.getMediaLink());
-//        return bucketName + "/" + uuid;
-//    }
 
     public String uploadToBucket(MultipartFile file) throws IOException {
         InputStream keyFile = ResourceUtils.getURL(keyFileLocation).openStream();
