@@ -19,23 +19,23 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class DataBucketUtil {
 
-//    @Value("${spring.cloud.gcp.storage.credentials.location}")
-//    private String keyFileLocation;
+    @Value("${spring.cloud.gcp.storage.credentials.location}")
+    private String keyFileLocation;
 
-    private String keyFileLocation = "classpath:lifty-gdsc-e2ffac987452.json";
+//    private String keyFileLocation = "classpath:lifty-gdsc-e2ffac987452.json";
 
-//    @Value("${spring.cloud.gcp.storage.bucket}")
-//    private String bucketName;
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
 
-    private String bucketName = "lifty-bucket";
+//    private String bucketName = "lifty-bucket";
 
-//    private final Storage storage;
-//
-//    @Autowired
-//    public DataBucketUtil(Storage storage) {
-//        this.storage = storage;
-//    }
-//
+    private final Storage storage;
+
+    @Autowired
+    public DataBucketUtil(Storage storage) {
+        this.storage = storage;
+    }
+
 //    public String uploadToBucket(MultipartFile file) throws IOException {
 //
 //        // 이미지 uuid와 파일 형식
@@ -58,6 +58,8 @@ public class DataBucketUtil {
         InputStream keyFile = ResourceUtils.getURL(keyFileLocation).openStream();
         String uuid = UUID.randomUUID().toString();
         String ext = file.getContentType();
+        log.info("uuid: " + uuid);
+        log.info("bucketName: " + bucketName);
 
         Storage storage = StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(keyFile))

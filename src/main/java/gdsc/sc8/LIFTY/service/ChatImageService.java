@@ -31,6 +31,7 @@ public class ChatImageService {
     public ImageResponseDto upload(String email, MultipartFile image) throws IOException {
         User user = userRepository.getUserByEmail(email);
         if (image.isEmpty()) {
+            log.info("이미지 없음");
             throw new NotFoundException(ErrorStatus.NO_IMAGE, ErrorStatus.NO_IMAGE.getMessage());
         }
         log.info("이미지 존재");
