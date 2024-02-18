@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -29,8 +31,9 @@ public class ChatController {
 
     @PostMapping(produces = "text/event-stream")
     public ResponseEntity<SseEmitter> chat(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user, @RequestBody ChatRequestDto request) {
-        SseEmitter response = chatService.generateResponse(user.getUsername(),request.getRequest(),request.isImage());
+        @Parameter(hidden = true) @AuthenticationPrincipal User user, @RequestBody ChatRequestDto request){
+
+        SseEmitter response = chatService.generateResponse(user.getUsername(),request.getRequest(),request.getIsImage());
         return ResponseEntity.ok().body(response);
     }
 }

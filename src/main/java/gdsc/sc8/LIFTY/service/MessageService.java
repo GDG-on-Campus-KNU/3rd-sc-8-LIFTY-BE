@@ -1,6 +1,6 @@
 package gdsc.sc8.LIFTY.service;
 
-import gdsc.sc8.LIFTY.DTO.gemini.GeminiRequestDto;
+
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.Message;
 import gdsc.sc8.LIFTY.enums.Sender;
@@ -8,7 +8,6 @@ import gdsc.sc8.LIFTY.infrastructure.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class MessageService {
         List<Message> message = new ArrayList<>();
         Sender prevSender = Sender.MODEL;
 
-        List<Message> candidates = messageRepository.findByChatAndCreatedAtBetween(chat,now.minusMinutes(15),now);
+        List<Message> candidates = messageRepository.findByChatAndCreatedAtBetween(chat,now.minusMinutes(5),now);
 
         // ensure that multiturn requests
         for(Message candidate:candidates){
@@ -53,4 +52,5 @@ public class MessageService {
 
         return messages;
     }
+
 }

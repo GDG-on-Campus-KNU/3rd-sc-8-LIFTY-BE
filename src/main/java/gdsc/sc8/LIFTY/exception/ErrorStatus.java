@@ -33,7 +33,8 @@ public enum ErrorStatus {
     /*
      * 500 Internal Server Error
      */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.")
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
+    RECEIVE_RESPONSE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR,"생성모델 호출에 실패했습니다.")
     ;
 
     private final HttpStatus httpStatus;
