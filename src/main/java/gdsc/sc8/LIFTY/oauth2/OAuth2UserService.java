@@ -7,12 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final OAuth2AuthorizedClientService authorizedClientService;
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -74,14 +69,4 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return userRepository.save(user);
     }
 
-    private OAuth2RefreshToken saveRefreshToken(String registrationId,String email){
-
-        OAuth2AuthorizedClient client = authorizedClientService
-                .loadAuthorizedClient(
-                        registrationId,
-                        email);
-        OAuth2RefreshToken refreshToken = client.getRefreshToken();
-
-        return refreshToken;
-    }
 }
