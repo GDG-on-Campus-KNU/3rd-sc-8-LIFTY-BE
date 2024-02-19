@@ -51,6 +51,11 @@ jobs:
           cd ./src/main/resources
           echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > "${{ secrets.GOOGLE_CREDENTIALS_NAME }}"
 
+      - name: Create Google Credentials JSON
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > "${{ secrets.GOOGLE_CREDENTIALS_NAME }}"
+
       - name: Build with Gradle
         run: ./gradlew clean build
 

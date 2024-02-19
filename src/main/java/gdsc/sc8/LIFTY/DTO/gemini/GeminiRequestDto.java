@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GeminiRequestDto implements Serializable {
     private List<Content> contents;
+    private GenerationConfig generationConfig;
     @Data
     @AllArgsConstructor
     public static class Content{
@@ -28,11 +29,18 @@ public class GeminiRequestDto implements Serializable {
     public static class Part{
         private String text;
         private FileData fileData;
+        private InlineData inlineData;
         @Data
         @AllArgsConstructor
         public static class FileData{
             private String mimeType;
-            private String fileUrl;
+            private String fileUri;
+        }
+        @Data
+        @AllArgsConstructor
+        public static class InlineData{
+            private String mimeType;
+            private String data;
         }
         public Part(String text){
             this.text=text;
@@ -40,28 +48,20 @@ public class GeminiRequestDto implements Serializable {
         public Part(FileData fileData){
             this.fileData=fileData;
         }
+        public Part(InlineData inlineData){
+            this.inlineData=inlineData;
+        }
     }
 
-    //TODO:멀티모달 contents 객체 생성
-    public GeminiRequestDto(String text,String imageUrl){
-        Part.FileData fileData = new Part.FileData("image/**",imageUrl);
-        Part part1 = new Part(text);
-        Part part2 = new Part(fileData);
-        List<Part> parts = new ArrayList<>();
-        parts.add(part1);
-        parts.add(part2);
-        Content content = new Content("USER",parts);
-        List<Content> contents = new ArrayList<>();
-        contents.add(content);
-        this.contents = contents;
-    }
 
     public static GeminiRequestDto toRequestDto(List<Message> messages){
         List<GeminiRequestDto.Content> contents = new ArrayList<>();
         for(Message message:messages)
             contents.add(GeminiRequestDto.toContent(message.getSender(),message.getContent()));
-        return new GeminiRequestDto(contents);
+
+        return new GeminiRequestDto(contents, new GenerationConfig());
     }
+
 
     public static Content toContent(Sender role, String text){
         List<Part> parts = new ArrayList<>();
@@ -73,6 +73,15 @@ public class GeminiRequestDto implements Serializable {
             parts.add(new Part(text));
             return new Content("MODEL",parts);
         }
+    }
+
+    public static GeminiRequestDto toRequestDto(String text){
+        List<GeminiRequestDto.Content> contents = new ArrayList<>();
+        List<Part> parts = new ArrayList<>();
+        parts.add(new Part(text));
+        contents.add(new Content("USER",parts));
+
+        return new GeminiRequestDto(contents, new GenerationConfig());
     }
 
 }

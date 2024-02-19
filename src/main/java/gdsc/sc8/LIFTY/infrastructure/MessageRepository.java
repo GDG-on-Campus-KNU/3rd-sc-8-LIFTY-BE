@@ -11,4 +11,5 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     List<Message> findByChatAndCreatedAtBetween(Chat chat, LocalDateTime start, LocalDateTime end);
     Long countByChat(Chat chat);
     List<Message> findByChat(Chat chat);
+
 }

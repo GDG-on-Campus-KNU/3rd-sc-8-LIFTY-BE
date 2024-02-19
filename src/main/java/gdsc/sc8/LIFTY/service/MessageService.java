@@ -1,5 +1,6 @@
 package gdsc.sc8.LIFTY.service;
 
+
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.Message;
 import gdsc.sc8.LIFTY.enums.Sender;
@@ -32,7 +33,7 @@ public class MessageService {
         List<Message> message = new ArrayList<>();
         Sender prevSender = Sender.MODEL;
 
-        List<Message> candidates = messageRepository.findByChatAndCreatedAtBetween(chat,now.minusMinutes(15),now);
+        List<Message> candidates = messageRepository.findByChatAndCreatedAtBetween(chat,now.minusMinutes(5),now);
 
         // ensure that multiturn requests
         for(Message candidate:candidates){

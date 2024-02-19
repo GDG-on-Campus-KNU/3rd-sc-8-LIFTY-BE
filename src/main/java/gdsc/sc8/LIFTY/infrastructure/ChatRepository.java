@@ -14,7 +14,7 @@ public interface ChatRepository extends JpaRepository<Chat,Long> {
 
     default Chat returnChat (User user, LocalDate today) {
         return this.findByUserAndDate(user,today)
-                .orElse(this.save(new Chat(user,today)));
+                .orElseGet(()-> this.save(new Chat(user,today)));
     }
 
 }
