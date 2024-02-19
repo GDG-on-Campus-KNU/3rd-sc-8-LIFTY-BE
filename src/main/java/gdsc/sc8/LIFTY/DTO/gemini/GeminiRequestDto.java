@@ -70,10 +70,8 @@ public class GeminiRequestDto implements Serializable {
             parts.add(new Part(text));
             return new Content("USER",parts);
         }
-        else {
-            parts.add(new Part(text));
-            return new Content("MODEL",parts);
-        }
+        parts.add(new Part(text));
+        return new Content("MODEL",parts);
     }
 
 }
