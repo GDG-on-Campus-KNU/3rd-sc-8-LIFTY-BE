@@ -57,10 +57,10 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST = {
         "/api/auth/**",
-        "/api/v1/**",
         "/swagger-ui/**",
         "/api-docs/**",
         "/login/**",
+        "/api/v1/chat"
     };
 
     private static final String[] AUTHENTICATION_LIST = {

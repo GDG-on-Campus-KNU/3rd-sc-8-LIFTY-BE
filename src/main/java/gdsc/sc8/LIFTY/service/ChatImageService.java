@@ -45,7 +45,10 @@ public class ChatImageService {
     }
 
     private ChatImage uploadToBucket(User user, MultipartFile image) throws IOException {
-        String imageUri = IMAGE_URI_PREFIX + dataBucketUtil.uploadToBucket(image);
+        String uri = dataBucketUtil.uploadToBucket(image);
+        String imageUri = IMAGE_URI_PREFIX + uri;
+        String gsutilUri = "gs://" + uri;
+
         log.info("이미지 업로드 완료");
         ChatImage chatImage = ChatImage.builder()
             .user(user)
