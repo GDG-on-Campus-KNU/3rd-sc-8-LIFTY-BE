@@ -46,6 +46,8 @@ public class ChatService {
         Chat chat = chatRepository.returnChat(user,LocalDate.now());
         messageService.saveMessage(Sender.USER, request, chat);
 
+        updateExp(user);
+
         if (!isImage)
             requestDto = GeminiRequestDto.toRequestDto(messageService.makeContents(chat));
         else requestDto = imageService.toRequestDtoWithImage(request,user.getSocialId()!=null);
@@ -62,6 +64,20 @@ public class ChatService {
                 .subscribe();
 
         return sseEmitter;
+    }
+
+    private void updateExp(User user) {
+        Long exp = user.getExp();
+        Long level = user.getLevel();
+
+        exp += 10 ;
+        if (exp >= 100 * (level + 1)) {
+            exp -= 100 * (level + 1);
+            level += 1;
+        }
+        user.updateExp(exp);
+        user.updateLevel(level);
+        userRepository.save(user);
     }
 
 
