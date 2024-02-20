@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -69,4 +68,5 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         user.setGeminiToken(geminiToken);
         return userRepository.save(user);
     }
+
 }
