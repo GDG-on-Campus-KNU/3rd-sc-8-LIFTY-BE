@@ -70,9 +70,13 @@ public class ChatService {
         Long exp = user.getExp();
         Long level = user.getLevel();
 
-        exp += 10 ;
-        if (exp >= 100 * (level + 1)) {
-            exp -= 100 * (level + 1);
+        if (level == 10) {
+            return;
+        }
+
+        exp += 10 - (level) ;
+        if (exp >= 100) {
+            exp -= 100;
             level += 1;
         }
         user.updateExp(exp);
