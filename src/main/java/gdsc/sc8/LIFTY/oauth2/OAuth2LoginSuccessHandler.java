@@ -47,6 +47,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             tokenProvider.getRefreshTokenExpireTime(),
             TimeUnit.MILLISECONDS);
 
-        response.sendRedirect("http://localhost:3000/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
+        response.sendRedirect("http://localhost:8002/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
     }
 }
