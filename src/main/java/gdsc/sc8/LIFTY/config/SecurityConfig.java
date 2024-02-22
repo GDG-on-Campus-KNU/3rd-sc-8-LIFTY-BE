@@ -60,7 +60,8 @@ public class SecurityConfig {
         "/swagger-ui/**",
         "/api-docs/**",
         "/login/**",
-        "/api/v1/chat"
+        "/api/v1/chat",
+        "/.well-known/**"
     };
 
     private static final String[] AUTHENTICATION_LIST = {
