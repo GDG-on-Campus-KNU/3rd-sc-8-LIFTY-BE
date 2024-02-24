@@ -16,6 +16,7 @@ public enum SuccessStatus {
     GET_USER_INFO_SUCCESS(HttpStatus.OK, "유저 정보 조회 성공"),
     CHAT_RESPONSE_SUCCESS(HttpStatus.OK, "Gemini 메시지를 받았습니다."),
     DIARY_RESPONSE_SUCCESS(HttpStatus.OK,"일기 조회 성공"),
+    REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),
 
     /*
      * 201 CREATED

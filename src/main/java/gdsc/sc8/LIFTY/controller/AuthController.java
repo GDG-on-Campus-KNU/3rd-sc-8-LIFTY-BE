@@ -7,7 +7,11 @@ import gdsc.sc8.LIFTY.DTO.auth.TokenDto;
 import gdsc.sc8.LIFTY.DTO.user.UserResponseDto;
 import gdsc.sc8.LIFTY.exception.SuccessStatus;
 import gdsc.sc8.LIFTY.service.AuthService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +37,17 @@ public class AuthController {
     public ApiResponseDto<TokenDto> login(
         @RequestBody LoginRequestDto loginRequestDto) {
         return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.login(loginRequestDto));
+    }
+
+    @PostMapping("/reissue")
+    @SecurityRequirements({
+        @SecurityRequirement(name = "Refresh")
+    })
+    public ApiResponseDto<TokenDto> reissue(
+        @Parameter(hidden = true) HttpServletRequest request) {
+        String refreshToken = request.getHeader("Refresh");
+        return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS,
+            authService.reissue(refreshToken));
     }
 
 }

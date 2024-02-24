@@ -64,13 +64,44 @@ public class AuthService {
 
             return tokenDto;
         } catch (AuthenticationException e) {
-            e.printStackTrace();
             throw new NotFoundException(ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION,
                 ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CustomException(ErrorStatus.INTERNAL_SERVER_ERROR,
                 ErrorStatus.INTERNAL_SERVER_ERROR.getMessage());
         }
+    }
+
+    @Transactional
+    public TokenDto reissue(String refreshToken) {
+
+        // 1. Refresh Token 검증
+        if (!tokenProvider.validateToken(refreshToken)) {
+            throw new NotFoundException(ErrorStatus.EXPIRED_TOKEN,
+                ErrorStatus.EXPIRED_TOKEN.getMessage());
+        }
+
+        // 2. Access Token 에서 Member ID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
+        String refreshTokenValue = redisTemplate.opsForValue()
+            .get("RT:" + authentication.getName());
+        // 4. Refresh Token 일치하는지 검사
+        if (!refreshToken.equals(refreshTokenValue)) {
+            throw new NotFoundException(ErrorStatus.INVALID_TOKEN,
+                ErrorStatus.INVALID_TOKEN.getMessage());
+        }
+
+        // 5. 새로운 토큰 생성
+        TokenDto newTokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // 6. 저장소 Refresh Token 갱신
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(),
+            newTokenDto.getRefreshToken(),
+            tokenProvider.getRefreshTokenExpireTime(),
+            TimeUnit.MILLISECONDS);
+
+        // 토큰 발급
+        return newTokenDto;
     }
 }

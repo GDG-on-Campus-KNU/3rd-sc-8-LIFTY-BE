@@ -16,6 +16,8 @@ public enum ErrorStatus {
     ALREADY_EXIST_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일입니다."),
     NO_IMAGE(HttpStatus.BAD_REQUEST, "이미지가 없습니다."),
     INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "올바르지 않은 파일 형식입니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다."),
+    EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "만료된 토큰입니다."),
 
     /*
      * 401 Unauthorized
