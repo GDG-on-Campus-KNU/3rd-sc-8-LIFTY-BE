@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @SecuritySchemes({
     @SecurityScheme(
-        name = "Refresh Token",
+        name = "Refresh",
         type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER
     ),
