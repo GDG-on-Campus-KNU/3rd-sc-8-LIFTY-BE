@@ -15,10 +15,14 @@ import gdsc.sc8.LIFTY.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -52,11 +56,20 @@ public class ChatService {
             requestDto = GeminiRequestDto.toRequestDto(messageService.makeContents(chat));
         else requestDto = imageService.toRequestDtoWithImage(request,user.getSocialId()!=null);
 
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(requestDto);
+            System.out.println(jsonString);
+        }catch (JsonProcessingException e){}
 
-        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user,isImage)
+
+
+        Flux<GeminiResponseDto> flux = geminiConfig.geminiClient(user, isImage)
                 .post()
                 .body(BodyInserters.fromValue(requestDto))
-                .exchangeToFlux(response -> response.bodyToFlux(GeminiResponseDto.class));
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, this::handleErrorResponse)
+                .bodyToFlux(GeminiResponseDto.class);
 
         flux.doOnNext(data -> emitAndSave(data,sseEmitter,chat))
                 .doOnComplete(sseEmitter::complete)
@@ -101,4 +114,17 @@ public class ChatService {
                     ErrorStatus.RECEIVE_RESPONSE_EXCEPTION.getMessage());
         }
     }
+
+    private Mono<? extends Throwable> handleErrorResponse(ClientResponse response) {
+        return response.bodyToMono(String.class)
+                .flatMap(msg -> Mono.error(new ChatGPTException(msg)));
+    }
+
+    static class ChatGPTException extends RuntimeException {
+        public ChatGPTException(String message) {
+            super(message);
+        }
+    }
+
+
 }

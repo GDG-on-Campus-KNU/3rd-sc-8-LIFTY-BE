@@ -3,6 +3,7 @@ package gdsc.sc8.LIFTY.service;
 
 import gdsc.sc8.LIFTY.domain.Chat;
 import gdsc.sc8.LIFTY.domain.Message;
+import gdsc.sc8.LIFTY.domain.prompt.ChattingPrompt;
 import gdsc.sc8.LIFTY.enums.Sender;
 import gdsc.sc8.LIFTY.infrastructure.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,7 @@ public class MessageService {
             } else break;
         }
         messages.add(candidates.get(candidates.size()-1));
+        messages.set(0,messages.get(0).addChatPrompt(ChattingPrompt.getInstance().getPrompt()));
 
 
         return messages;

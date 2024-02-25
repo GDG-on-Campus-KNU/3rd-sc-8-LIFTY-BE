@@ -33,8 +33,8 @@ public class DiaryController {
                 diaryService.getDiaries(user.getUsername()));
     }
 
-//    @GetMapping("/test")
-//    public void test(@Parameter(hidden = true) @AuthenticationPrincipal User user){
-//        diaryService.checkPossibleDiary();
-//    }
+    @GetMapping("/test")
+    public void test(@Parameter(hidden = true) @AuthenticationPrincipal User user){
+        diaryService.checkPossibleDiary();
+    }
 }

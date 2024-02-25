@@ -14,9 +14,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GeminiRequestDto implements Serializable {
     private List<Content> contents;
     private GenerationConfig generationConfig;
+    private List<SafetySetting> safetySettings;
     @Data
     @AllArgsConstructor
     public static class Content{
@@ -53,6 +55,11 @@ public class GeminiRequestDto implements Serializable {
         }
     }
 
+    public GeminiRequestDto(List<Content> contents, GenerationConfig generationConfig){
+        this.contents = contents;
+        this.generationConfig=generationConfig;
+    }
+
 
     public static GeminiRequestDto toRequestDto(List<Message> messages){
         List<GeminiRequestDto.Content> contents = new ArrayList<>();
@@ -81,7 +88,13 @@ public class GeminiRequestDto implements Serializable {
         parts.add(new Part(text));
         contents.add(new Content("USER",parts));
 
-        return new GeminiRequestDto(contents, new GenerationConfig());
+        List<SafetySetting> safetySettings = new ArrayList<>();
+        safetySettings.add(new SafetySetting("HARM_CATEGORY_SEXUALLY_EXPLICIT","BLOCK_NONE"));
+        safetySettings.add(new SafetySetting("HARM_CATEGORY_HATE_SPEECH","BLOCK_NONE"));
+        safetySettings.add(new SafetySetting("HARM_CATEGORY_HARASSMENT","BLOCK_NONE"));
+        safetySettings.add(new SafetySetting("HARM_CATEGORY_DANGEROUS_CONTENT","BLOCK_NONE"));
+
+        return new GeminiRequestDto(contents, new GenerationConfig(), safetySettings);
     }
 
 }
