@@ -27,4 +27,10 @@ public class Message {
     @Column(length = 10000)
     private String content;
     private LocalDateTime createdAt;
+
+    public Message addChatPrompt(String content) {
+        this.content = content + this.content;
+        return this;
+    }
 }
+
