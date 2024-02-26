@@ -1,0 +1,63 @@
+# LIFTY - Backend
+
+## Introduction
+LIFTY is an application built with the goal of lifting up socially isolated people and reintegrating them into society. We want to heal your heart with a friendly chatbot mate.
+
+## Prerequisites
+- Java 17 or higher
+- Gradle
+- MySQL and Redis (port 6379, password included)
+
+## Installation
+
+1. Clone the source code.
+
+```
+git clone https://github.com/GDSC-KNU/3rd-sc-8-LIFTY-BE.git
+```
+
+2. Navigate to the project directory.
+
+```
+cd 3rd-sc-8-LIFTY-BE
+```
+
+3. Install dependencies.
+
+```
+gradle build
+```
+
+4. Create application.yml and api.json
+<details>
+<summary> application.yml (local) and json with BASE64 encoded </summary>
+<div markdown="1">
+
+```
+c3ByaW5nOgogIGRhdGFzb3VyY2U6CiAgICB1cmw6IGpkYmM6bXlzcWw6Ly9sb2NhbGhvc3Q6MzMwNi9saWZ0eT9zZXJ2ZXJUaW1lem9uZT1Bc2lhL1Nlb3VsJmNoYXJhY3RlckVuY29kaW5nPVVURi04CiAgICB1c2VybmFtZTogeW91cl91c2VyX25hbWUKICAgIHBhc3N3b3JkOiB5b3VyX3Bhc3N3b3JkCiAgICBkcml2ZXItY2xhc3MtbmFtZTogY29tLm15c3FsLmNqLmpkYmMuRHJpdmVyCgogIGpwYToKICAgIGhpYmVybmF0ZToKICAgICAgZGRsLWF1dG86IGNyZWF0ZQogICAgc2hvdy1zcWw6IHRydWUKCiAgZGF0YToKICAgIHJlZGlzOgogICAgICBob3N0OiBsb2NhbGhvc3QKICAgICAgcG9ydDogNjM3OQogICAgICBwYXNzd29yZDogMjAyNGxpZnR5CgogIHNlY3VyaXR5OgogICAgb2F1dGgyOgogICAgICBjbGllbnQ6CiAgICAgICAgcmVnaXN0cmF0aW9uOgogICAgICAgICAgZ29vZ2xlOgogICAgICAgICAgICBjbGllbnQtaWQ6IDc0NjA0OTQ1NDQ0MC1pcXAxNGtmZWlzazl1anZ0dXBiZWFjcDhpZ21lMHNpZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbQogICAgICAgICAgICBjbGllbnQtc2VjcmV0OiBHT0NTUFgtZGpjVUNGV2hfMG9oOXd3ZjAzRXpFdEg0dkF6VQogICAgICAgICAgICBzY29wZToKICAgICAgICAgICAgICAtIGVtYWlsCiAgICAgICAgICAgICAgLSBwcm9maWxlCiAgICAgICAgICAgICAgLSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2Nsb3VkLXBsYXRmb3JtCiAgICAgICAgICAgICAgLSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2dlbmVyYXRpdmUtbGFuZ3VhZ2UucmV0cmlldmVyCiAgICAgICAgICAgIGF1dGhvcml6YXRpb24tZ3JhbnQtdHlwZTogYXV0aG9yaXphdGlvbl9jb2RlCiAgICAgICAgICAgIGFjY2Vzc190eXBlOiBvZmZsaW5lCiAgICAgICAgICAgIHByb21wdDogY29uc2VudAoKY2xvdWQ6CiAgICBnY3A6CiAgICAgIHN0b3JhZ2U6CiAgICAgICAgY3JlZGVudGlhbHM6CiAgICAgICAgICBsb2NhdGlvbjogY2xhc3NwYXRoOmxpZnR5LWdkc2MtZTJmZmFjOTg3NDUyLmpzb24KICAgICAgICBwcm9qZWN0LWlkOiBsaWZ0eS1nZHNjCiAgICAgICAgYnVja2V0OiBsaWZ0eS1idWNrZXQKCmxvZ2dpbmc6CiAgbGV2ZWw6CiAgICBvcmc6CiAgICAgIHNwcmluZ2ZyYW1ld29yazoKICAgICAgICBzZWN1cml0eTogREVCVUcKCnNwcmluZ2RvYzoKICBwYWNrYWdlcy10by1zY2FuOiBnZHNjLnNjOC5MSUZUWQogIGRlZmF1bHQtY29uc3VtZXMtbWVkaWEtdHlwZTogYXBwbGljYXRpb24vanNvbjtjaGFyc2V0PVVURi04CiAgZGVmYXVsdC1wcm9kdWNlcy1tZWRpYS10eXBlOiBhcHBsaWNhdGlvbi9qc29uO2NoYXJzZXQ9VVRGLTgKICBzd2FnZ2VyLXVpOgogICAgdGFncy1zb3J0ZXI6IGFscGhhCiAgICBvcGVyYXRpb25zLXNvcnRlcjogYWxwaGEKICBhcGktZG9jczoKICAgIHBhdGg6IC9hcGktZG9jcy9qc29uCiAgICBncm91cHM6CiAgICAgIGVuYWJsZWQ6IHRydWUKICAgIGNhY2hlOgogICAgICBkaXNhYmxlZDogdHJ1ZQoKand0OgogIHNlY3JldDogTWpBeU0wZEVVME5MVGxWSGIyOW5iR1ZUYjJ4MWRHbHZia05vWVd4c1pXNW5aVXhwWm5SNVUzQnlhVzVuUW1GamEyVnVaRUZ3Y0d4cFkyRjBhVzl1d2VuQldFRldld2VmbndpZWZud2VmMzkyM2Jhc2RqQVdFCgoKCiMg7LaU6rCA65CcIOu2gOu2hApnZW1pbmk6CiAgc2VjcmV0OgogICAga2V5OiBBSXphU3lDeFJWNnR0RnVxVHp6bmdjUXFiMFF2OUYtTmRuQ2NOa1kKICBwcm9qZWN0OgogICAgaWQ6IGxpZnR5LWdkc2MKICByZWdpb246IGFzaWEtbm9ydGhlYXN0Mwo=
+```
+
+</div>
+</details>
+
+for more information, please read our github action workflows.
+
+
+## Running the Application
+
+1. Run the application.
+
+```
+gradle bootRun
+```
+
+2. Or you can just download our docker container from docker hub.
+
+```
+docker pull shinsion/lifty-server-dev:latest
+docker run -d -p 8080:8080 shinsion/lifty-server-dev:latest
+```
+
+3. Access Swagger UI by navigating to `http://localhost:8080/swagger-ui/index.html` in your browser.
+
+4. Or you can access our deployment Swagger UI by navigating to `https://dev.api.lifty.page/swagger-ui/index.html` in your browser.
